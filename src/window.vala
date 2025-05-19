@@ -24,6 +24,12 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     [GtkChild]
     public unowned Gtk.Button cancel_btt;
 
+    [GtkChild]
+    public unowned Gtk.Revealer warn_rev;
+
+    [GtkChild]
+    public unowned Gtk.Label warn_label;
+
     public Prompt prompt;
 
     public Window () {
@@ -38,12 +44,19 @@ public class GPrompt.Window : Adw.ApplicationWindow {
         prompt.bind_property ("description", description_label, "label", BindingFlags.SYNC_CREATE, null, null);
         prompt.bind_property ("cancel-label", cancel_btt, "label", BindingFlags.SYNC_CREATE, null, null);
 
+        //  prompt.bind_property ("confirm-visible", confirm_password_rev, "visible", BindingFlags.SYNC_CREATE, null, null);
+        //  prompt.bind_property ("warning", warn_rev, "reveal-child", BindingFlags.SYNC_CREATE, show_revealer, null);
+        prompt.notify.connect (show_revealer);
+
         unlock_btt.clicked.connect ( on_unlock_clicked);
         cancel_btt.clicked.connect (on_cancel_clicked);
-        info ("s");
 
-        present ();
-        set_visible (false);
+        close_request.connect (on_window_close);
+    }
+
+    private void show_revealer () {
+        info(prompt.warning);
+        info("%b", prompt.warning != "");
     }
 
     private void set_sensitivity (bool sensitive) {
@@ -63,11 +76,14 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     }
 
     private void on_show_password () {
-        if (get_visible () == true) {
-            return;
+        present ();
+        set_sensitivity (true);
+        if (prompt.warning != "") {
+            warn_rev.set_reveal_child (true);
+            warn_label.set_label (prompt.warning);
+        } else {
+            warn_rev.set_reveal_child (false);
         }
-        info("presenting");
-        set_visible (true);
         password_entry.set_text ("");
         password_entry.grab_focus ();
     }
@@ -76,8 +92,8 @@ public class GPrompt.Window : Adw.ApplicationWindow {
         close ();
     }
 
-    //  private void on_show_confirm () {
-    //      confirm_password_rev.set_reveal_child (true);
-
-    //  }
+    private bool on_window_close () {
+        prompt.cancel ();
+        return false;
+    }
 }

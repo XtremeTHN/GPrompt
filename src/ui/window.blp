@@ -8,6 +8,10 @@ template $GPromptWindow : Adw.ApplicationWindow {
         Adw.HeaderBar {}
 
         content: Adw.Clamp {
+            margin-start: 10;
+            margin-bottom: 10;
+            margin-end: 10;
+            margin-top: 10;
             child: Box {
                 hexpand: true;
                 orientation: vertical;
@@ -50,8 +54,13 @@ template $GPromptWindow : Adw.ApplicationWindow {
                     }
                 }
 
+                Revealer warn_rev {
+                  child: Label warn_label {
+                    xalign: 0;
+                  };
+                }
+
                 Box {
-                    styles ["linked"]
                     spacing: 5;
                     homogeneous: true;
                     Button unlock_btt {

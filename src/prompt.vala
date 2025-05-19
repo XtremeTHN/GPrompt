@@ -41,31 +41,33 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
 
     public Prompt () {
         Object ();
-        //  stdout.write("created", size_t size)
     }
 
     public async unowned string password_async(GLib.Cancellable? cancellable) {
         debug("password_async initiated");
         _pass_async_cb = password_async.callback;
         
-        warn_if_fail (_pass_async_cb == null);
+        if (_pass_async_cb != null) {
+            critical ("A prompt is already showing");
+        }
 
         mode = Mode.FOR_PASSWORD;
         shown = true;
 
         show_password ();
 
-        yield;
+        yield; // waits for _pass_async_cb to be called
         
+        //  return password_entry.get_text ();
         return password_entry.get_text ();
     }
 
     public bool complete () {
         debug("complete called");
         if (mode == Mode.NONE) { return false; };
-        if (showing == false) { return false; };
 
         string pass = password_entry.get_text ();
+
         if (mode == Mode.FOR_PASSWORD) {
             if (password_new) {
                 string confirm = confirm_entry.get_text ();
@@ -82,12 +84,10 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
         mode = Mode.NONE;
 
         if (last_mode == Mode.FOR_CONFIRM) {
-            // FIXME: asd //  confirm_set = true;
-            Idle.add(_confirm_async_cb);
+            _confirm_async_cb (); // resume execution in confirm_async
 
         } else {
-            Idle.add (_pass_async_cb);
-            //  password_set = true;
+            _pass_async_cb (); // resume execution in password_async
         }
 
         return true;
@@ -100,30 +100,38 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
     }
 
     public async Gcr.PromptReply confirm_async(GLib.Cancellable? cancellable) {
-        warn_if_fail (_confirm_async_cb == null);
+        if (_confirm_async_cb != null) {
+            critical ("A prompt is already showing");
+        }
+
         _confirm_async_cb = confirm_async.callback;
-        yield;
+        yield; // waits for _confirm_async_cb to be called
 
         return confirmation;
     }
 
     public void cancel () {
-        if (showing == false) {
-            return;
-        }
+        debug ("cancel");
+        GLib.message ("cancelled");
 
         switch (mode) {
             case Mode.NONE:
+                debug ("Mode is NONE");
                 close ();
                 return;
             case Mode.FOR_CONFIRM:
+                debug("Mode is confirm");
                 confirmation = Gcr.PromptReply.CANCEL;
-                //  confirm_set = true
-                Idle.add(_confirm_async_cb);
+                close ();
+                _confirm_async_cb ();
                 break;
-            default:
-                return;
+            case Mode.FOR_PASSWORD:
+                debug("Mode is password");
+                close ();
+                break;
         }
+        _confirm_async_cb = null;
+        _pass_async_cb = null;
     }
 
     private static int calculate_password_strength (string password) {
