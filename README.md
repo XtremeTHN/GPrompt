@@ -5,7 +5,7 @@ A `Gcr.Prompt` implementation written in vala. It features a libadwaita window t
 ### NixOs
 Run `nix build`
 
-## Meson
+### Meson
 You need the following dependencies (archlinux pkgs names).
 - `gcr-4`
 - `gtk4`
