@@ -5,6 +5,7 @@ dependencies = [
     dependency('gobject-2.0'),
     dependency('gcr-4'),
     dependency('gtk4'),
+    dependency('gtk4-layer-shell-0'),
     dependency('libadwaita-1')
 ]
 

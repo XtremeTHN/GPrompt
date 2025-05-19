@@ -33,6 +33,10 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     public Prompt prompt;
 
     public Window () {
+        GtkLayerShell.init_for_window (this);
+        GtkLayerShell.set_layer (this, GtkLayerShell.Layer.OVERLAY);
+        GtkLayerShell.set_keyboard_mode (this, GtkLayerShell.KeyboardMode.ON_DEMAND);
+
         prompt = new Prompt ();
         prompt.password_entry = password_entry;
         prompt.confirm_entry = confirm_password_entry;
@@ -77,6 +81,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
 
     private void on_show_password () {
         present ();
+
         set_sensitivity (true);
         if (prompt.warning != "") {
             warn_rev.set_reveal_child (true);

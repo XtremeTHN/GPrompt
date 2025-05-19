@@ -11,6 +11,7 @@ public class App : Adw.Application {
     private Gcr.Prompt on_new_prompt () {
         var window = new GPrompt.Window ();
         add_window (window);
+        window.set_css_classes ({ "background", "csd" });
         return window.prompt;
     }
 
@@ -18,6 +19,11 @@ public class App : Adw.Application {
         base.startup ();
 
         prompter = new Gcr.SystemPrompter (Gcr.SystemPrompterMode.MULTIPLE, 0);
+
+        var provider = new Gtk.CssProvider ();
+        // this fixes the window not having borders
+        provider.load_from_string (".fullscreen { outline: 1px solid rgb(255 255 255 / 7%); outline-offset: -1px; border-radius: 14px; }");
+        Gtk.StyleContext.add_provider_for_display (Gdk.Display.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
 
         try {
             var conn = Bus.get_sync (BusType.SESSION, null);

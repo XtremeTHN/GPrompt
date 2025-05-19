@@ -19,6 +19,7 @@
       libadwaita
       glib
       gcr_4
+      gtk4-layer-shell
     ];
   in {
     devShells.${system}.default = pkgs.mkShell {
