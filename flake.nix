@@ -28,7 +28,7 @@
     };
 
     packages.${system}.default = pkgs.stdenv.mkDerivation {
-      name = "test";
+      name = "gprompt";
       version = "0.1";
       src = ./.;
       inherit nativeBuildInputs buildInputs;

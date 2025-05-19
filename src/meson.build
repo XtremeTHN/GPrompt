@@ -14,7 +14,13 @@ sources = [
   'main.vala'
 ]
 
-subdir('ui')
+blueprints = custom_target('blueprints',
+  input: files(
+    'ui/window.blp'
+  ),
+  output: 'ui',
+  command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', 'ui', '@INPUT@'],
+)
 
 sources += gnome.compile_resources(
     'gprompt',
@@ -24,4 +30,4 @@ sources += gnome.compile_resources(
 )
 
 executable('gprompt', sources, dependencies : dependencies,
-  install : true)
+  install : true, c_args: ['-DGCR_API_SUBJECT_TO_CHANGE',])

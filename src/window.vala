@@ -27,20 +27,23 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     public Prompt prompt;
 
     public Window () {
+        prompt = new Prompt ();
         prompt.password_entry = password_entry;
         prompt.confirm_entry = confirm_password_entry;
 
-        prompt.connect ("show-password", on_show_password);
-        prompt.connect ("prompt-close", on_close);
-        
+        prompt.show_password.connect(on_show_password);
+        prompt.prompt_close.connect (on_close);
+
         prompt.bind_property ("title", title_label, "label", BindingFlags.SYNC_CREATE, null, null);
         prompt.bind_property ("description", description_label, "label", BindingFlags.SYNC_CREATE, null, null);
         prompt.bind_property ("cancel-label", cancel_btt, "label", BindingFlags.SYNC_CREATE, null, null);
 
-        unlock_btt.connect ("clicked", on_unlock_clicked);
-        cancel_btt.connect ("clicked", on_cancel_clicked);
+        unlock_btt.clicked.connect ( on_unlock_clicked);
+        cancel_btt.clicked.connect (on_cancel_clicked);
+        info ("s");
 
-        //  prompt.connect ("show-confirm", on_show_confirm);
+        present ();
+        set_visible (false);
     }
 
     private void set_sensitivity (bool sensitive) {
@@ -50,16 +53,21 @@ public class GPrompt.Window : Adw.ApplicationWindow {
         cancel_btt.set_sensitive (sensitive);
     }
 
-    private void on_unlock_clicked () {
+    private void on_unlock_clicked (Gtk.Button _) {
         set_sensitivity (false);
         prompt.complete ();
     }
 
-    private void on_cancel_clicked () {
+    private void on_cancel_clicked (Gtk.Button _) {
         prompt.cancel ();
     }
 
     private void on_show_password () {
+        if (get_visible () == true) {
+            return;
+        }
+        info("presenting");
+        set_visible (true);
         password_entry.set_text ("");
         password_entry.grab_focus ();
     }

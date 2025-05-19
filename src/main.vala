@@ -1,4 +1,5 @@
 public class App : Adw.Application {
+    public Gcr.SystemPrompter prompter;
     public App () {
         Object (
             application_id: "com.github.XtremeTHN.Exp",
@@ -8,24 +9,30 @@ public class App : Adw.Application {
 
     private Gcr.Prompt on_new_prompt () {
         var window = new GPrompt.Window ();
-        add_window (window);
+        //  add_window (window);
         return window.prompt;
     }
 
     protected override void startup () {
-        hold ();
-        
-        var prompter = new Gcr.SystemPrompter (Gcr.SystemPrompterMode.SINGLE, typeof (GPrompt.Prompt));
-        prompter.connect ("new-promt", on_new_prompt);
+        base.startup ();
 
+        prompter = new Gcr.SystemPrompter (Gcr.SystemPrompterMode.MULTIPLE, 0);
+        
         try {
             var conn = Bus.get_sync (BusType.SESSION, null);
             prompter.register (conn);
             GLib.Bus.own_name_on_connection (conn, "org.gnome.keyring.SystemPrompter", BusNameOwnerFlags.ALLOW_REPLACEMENT, null, null);
+            //  prompter.signal["new-prompt"].connect ((obj) => on_new_prompt());
+            //  prompter.connect ("new-prompt", on_new_prompt );
+            prompter.new_prompt.connect (on_new_prompt);
+            //  prompter.new_prompt ();
+            
         } catch (Error e) {
             critical ("Couldn't register prompter %s", e.message);
             return;
         }
+
+        hold ();
     }
 
     public static int main(string[] args) {

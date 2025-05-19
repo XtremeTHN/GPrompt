@@ -1,5 +1,5 @@
-public class GPrompt.Prompt : Object, Gcr.Prompt {
 
+public class GPrompt.Prompt : Object, Gcr.Prompt {
     public string caller_window { owned get; set construct; }
     public string cancel_label { owned get; set construct; }
     public bool choice_chosen { get; set; }
@@ -31,31 +31,37 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
 
     private Mode mode = Mode.NONE;
     private bool shown = false;
-    private bool showing = true;
+    private bool showing = false;
 
-    private bool password_set = false;
-    private bool confirm_set = false;
+    private SourceFunc? _pass_async_cb;
+    private SourceFunc? _confirm_async_cb;
 
     public signal void show_password ();
     public signal void show_confirm ();
 
     public Prompt () {
         Object ();
+        //  stdout.write("created", size_t size)
     }
 
     public async unowned string password_async(GLib.Cancellable? cancellable) {
-        if (showing == true) {
-            GLib.warning("A prompt is already showing");
-        }
+        debug("password_async initiated");
+        _pass_async_cb = password_async.callback;
+        
+        warn_if_fail (_pass_async_cb == null);
+
         mode = Mode.FOR_PASSWORD;
         shown = true;
 
-        show_password();
+        show_password ();
 
-        return yield wait_for_pass();
+        yield;
+        
+        return password_entry.get_text ();
     }
 
     public bool complete () {
+        debug("complete called");
         if (mode == Mode.NONE) { return false; };
         if (showing == false) { return false; };
 
@@ -76,9 +82,12 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
         mode = Mode.NONE;
 
         if (last_mode == Mode.FOR_CONFIRM) {
-            confirm_set = true;
+            // FIXME: asd //  confirm_set = true;
+            Idle.add(_confirm_async_cb);
+
         } else {
-            password_set = true;
+            Idle.add (_pass_async_cb);
+            //  password_set = true;
         }
 
         return true;
@@ -90,18 +99,11 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
         prompt_close ();
     }
 
-    private async unowned string wait_for_pass() {
-        while (password_set == false) {}
-        password_set = false;
-        return password_entry.get_text();
-    }
     public async Gcr.PromptReply confirm_async(GLib.Cancellable? cancellable) {
-        return yield wait_for_confirm();
-    }
+        warn_if_fail (_confirm_async_cb == null);
+        _confirm_async_cb = confirm_async.callback;
+        yield;
 
-    private async Gcr.PromptReply wait_for_confirm() {
-        while (confirm_set == false) {}
-        confirm_set = false;
         return confirmation;
     }
 
@@ -116,7 +118,8 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
                 return;
             case Mode.FOR_CONFIRM:
                 confirmation = Gcr.PromptReply.CANCEL;
-                confirm_set = true;
+                //  confirm_set = true
+                Idle.add(_confirm_async_cb);
                 break;
             default:
                 return;
