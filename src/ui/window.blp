@@ -1,0 +1,71 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $GPromptWindow : Adw.ApplicationWindow {
+    title: "Keyring";
+    content: Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {}
+
+        content: Adw.Clamp {
+            child: Box {
+                hexpand: true;
+                orientation: vertical;
+                spacing: 10;
+
+                Box {
+                    orientation: vertical;
+                    Label title_label {
+                        styles ["title-3"]
+                    }
+                    Label description_label {}
+                }
+
+                Box {
+                    orientation: vertical;
+                    spacing: 5;
+
+                    PasswordEntry password_entry {
+                        placeholder-text: _("Password");
+                        show-peek-icon: true;
+                    }
+                    Revealer confirm_password_rev {
+                        child: Box {
+                            orientation: vertical;
+                            spacing: 10;
+                            PasswordEntry confirm_password_entry {
+                                placeholder-text: _("Confirm password");
+                                show-peek-icon: true;
+                            }
+                            Box {
+                                spacing: 5;
+                                orientation: vertical;
+                                Label {
+                                    xalign: 0;
+                                    label: _("Password strength");
+                                }
+                                LevelBar password_strength_level {}
+                            }
+                        };
+                    }
+                }
+
+                Box {
+                    styles ["linked"]
+                    spacing: 5;
+                    homogeneous: true;
+                    Button unlock_btt {
+                        styles ["warning"]
+                        child: Adw.ButtonContent {
+                          icon-name: "unlock-symbolic";
+                          label: _("Unlock");
+                        };
+                    }
+                    Button cancel_btt {
+                        label: _("Cancel");
+                    }
+                }
+            };
+        };
+    };
+}
