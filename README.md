@@ -1,6 +1,9 @@
 # GPrompt
 A `Gcr.Prompt` implementation written in vala. It features a libadwaita window to unlock the gnome keyring.
 
+## Features
+Currently it only has support for unlocking the keyring, but maybe I will implement the new password functions.
+
 ## Building 
 ### NixOs
 Run `nix build`
