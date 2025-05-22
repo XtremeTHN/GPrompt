@@ -22,11 +22,7 @@
       gtk4-layer-shell
     ];
   in {
-    devShells.${system}.default = pkgs.mkShell {
-      packages = with pkgs; [
-        vala-language-server
-      ] ++ nativeBuildInputs ++ buildInputs;
-    };
+    devShells.${system}.default = (pkgs.callPackage ./shell.nix);
 
     packages.${system}.default = pkgs.stdenv.mkDerivation {
       name = "gprompt";
