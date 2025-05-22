@@ -11,7 +11,6 @@ public class App : Adw.Application {
     private Gcr.Prompt on_new_prompt () {
         var window = new GPrompt.Window ();
         add_window (window);
-        window.set_css_classes ({ "background", "csd" });
         return window.prompt;
     }
 

@@ -31,8 +31,12 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     public unowned Gtk.Label warn_label;
 
     public Prompt prompt;
+    private Background back;
 
     public Window () {
+        back = new Background ();
+        back.present ();
+
         GtkLayerShell.init_for_window (this);
         GtkLayerShell.set_layer (this, GtkLayerShell.Layer.OVERLAY);
         GtkLayerShell.set_keyboard_mode (this, GtkLayerShell.KeyboardMode.ON_DEMAND);
@@ -48,6 +52,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
         prompt.bind_property ("description", description_label, "label", BindingFlags.SYNC_CREATE, null, null);
         prompt.bind_property ("cancel-label", cancel_btt, "label", BindingFlags.SYNC_CREATE, null, null);
 
+        // TODO: Implement this
         //  prompt.bind_property ("confirm-visible", confirm_password_rev, "visible", BindingFlags.SYNC_CREATE, null, null);
         //  prompt.bind_property ("warning", warn_rev, "reveal-child", BindingFlags.SYNC_CREATE, show_revealer, null);
         prompt.notify.connect (show_revealer);
@@ -94,6 +99,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     }
 
     private void on_close () {
+        back.close ();
         close ();
     }
 

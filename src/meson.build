@@ -12,6 +12,7 @@ dependencies = [
 sources = [
   'prompt.vala',
   'window.vala',
+  'background.vala',
   'main.vala'
 ]
 
