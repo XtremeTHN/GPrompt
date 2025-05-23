@@ -1,6 +1,7 @@
 
 public class App : Adw.Application {
     public Gcr.SystemPrompter prompter;
+    double opacity = 0.5;
     public App () {
         Object (
             application_id: "com.github.XtremeTHN.Exp",
@@ -9,13 +10,17 @@ public class App : Adw.Application {
     }
 
     private Gcr.Prompt on_new_prompt () {
-        var window = new GPrompt.Window ();
+        var window = new GPrompt.Window (opacity);
         add_window (window);
         return window.prompt;
     }
 
     protected override void startup () {
         base.startup ();
+        var op_var = GLib.Environment.get_variable ("XTREME_BACKGROUND_OPACITY");
+        if (op_var != null) {
+            opacity = double.parse (op_var);
+        }
 
         prompter = new Gcr.SystemPrompter (Gcr.SystemPrompterMode.MULTIPLE, 0);
 

@@ -9,7 +9,5 @@ public class GPrompt.Background : Adw.ApplicationWindow {
         GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.RIGHT, true);
         GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.BOTTOM, true);
         GtkLayerShell.set_anchor (this, GtkLayerShell.Edge.LEFT, true);
-
-        set_opacity (0.1);
     }
 }

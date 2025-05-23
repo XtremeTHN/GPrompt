@@ -33,8 +33,9 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     public Prompt prompt;
     private Background back;
 
-    public Window () {
+    public Window (double background_opacity) {
         back = new Background ();
+        back.set_opacity (background_opacity);
         back.present ();
 
         GtkLayerShell.init_for_window (this);
