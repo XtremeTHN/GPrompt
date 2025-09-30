@@ -2,7 +2,7 @@
     <gresource prefix="/com/github/XtremeTHN/GPrompt">
         <file preprocess="xml-stripblanks">ui/window.ui</file>
     </gresource>
-    <gresource prefix="/org/gtk/example/icons/scalable/actions/">
+    <gresource prefix="/com/github/XtremeTHN/GPrompt/icons/scalable/actions/">
         <file preprocess="xml-stripblanks" alias="unlock-symbolic.svg">icons/unlock-symbolic.svg</file>
     </gresource>
 </gresources>
