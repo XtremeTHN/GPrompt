@@ -19,8 +19,17 @@ template $GPromptWindow : Adw.ApplicationWindow {
 
                 Box {
                     orientation: vertical;
-                    Label title_label {
-                        styles ["title-3"]
+                    Box {
+                      spacing: 10;
+                      halign: center;
+
+                      Image {
+                          icon-name: "unlock-symbolic";
+                      }
+
+                      Label title_label {
+                          styles ["title-3"]
+                      }
                     }
                     Label description_label {}
                 }
@@ -56,19 +65,17 @@ template $GPromptWindow : Adw.ApplicationWindow {
 
                 Revealer warn_rev {
                   child: Label warn_label {
-                    xalign: 0;
+                    styles ["error", "caption"]
                   };
                 }
 
                 Box {
-                    spacing: 5;
+                    styles ["linked"]
+                    
                     homogeneous: true;
                     Button unlock_btt {
                         styles ["warning"]
-                        child: Adw.ButtonContent {
-                          icon-name: "unlock-symbolic";
-                          label: _("Unlock");
-                        };
+                        label: "Unlock";
                     }
                     Button cancel_btt {
                         label: _("Cancel");

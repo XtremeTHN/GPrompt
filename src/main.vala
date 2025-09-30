@@ -4,7 +4,7 @@ public class App : Adw.Application {
     double opacity = 0.5;
     public App () {
         Object (
-            application_id: "com.github.XtremeTHN.Exp",
+            application_id: "com.github.XtremeTHN.GPrompt",
             flags: ApplicationFlags.IS_SERVICE
         );
     }
