@@ -56,7 +56,7 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
 
     show_password ();
 
-    yield;     // waits for _pass_async_cb to be called
+    yield; // waits for _pass_async_cb to be called
 
     // return password_entry.get_text ();
     return password_entry.get_text ();
@@ -84,9 +84,9 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
     mode = Mode.NONE;
 
     if (last_mode == Mode.FOR_CONFIRM) {
-      _confirm_async_cb ();       // resume execution in confirm_async
+      _confirm_async_cb (); // resume execution in confirm_async
     } else {
-      _pass_async_cb ();       // resume execution in password_async
+      _pass_async_cb (); // resume execution in password_async
     }
 
     return true;
@@ -103,8 +103,9 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
       critical ("A prompt is already showing");
     }
 
+    GLib.message ("confirm");
     _confirm_async_cb = confirm_async.callback;
-    yield;     // waits for _confirm_async_cb to be called
+    yield; // waits for _confirm_async_cb to be called
 
     return confirmation;
   }
