@@ -52,7 +52,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     prompt.show_password.connect (on_show_password);
     prompt.prompt_close.connect (on_close);
 
-    prompt.bind_property ("title", title_label, "label", BindingFlags.SYNC_CREATE, null, null);
+    // prompt.bind_property ("title", title_label, "label", BindingFlags.SYNC_CREATE, null, null);
     prompt.bind_property ("description", description_label, "label", BindingFlags.SYNC_CREATE, null, null);
     prompt.bind_property ("cancel-label", cancel_btt, "label", BindingFlags.SYNC_CREATE, null, null);
 
@@ -102,13 +102,15 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     set_sensitivity (true);
     password_entry.grab_focus ();
 
+    message (prompt.message);
+
+    if (prompt.title == "")
+      title_label.set_label (prompt.message);
+    else
+      title_label.set_label (prompt.title);
+
     if (prompt.password_new) {
       message ("New password");
-      if (prompt.title == "") {
-        // maybe this shouldn't be set in here but it looks ugly when theres no label
-        prompt.title = "Password";
-      }
-
       icon.set_from_icon_name ("key-symbolic");
 
       confirm_password_entry.set_text ("");
