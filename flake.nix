@@ -29,6 +29,7 @@
         inherit nativeBuildInputs buildInputs;
 
         packages = with pkgs; [
+          seahorse
           vala-language-server
           uncrustify
         ];
