@@ -102,8 +102,6 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     set_sensitivity (true);
     password_entry.grab_focus ();
 
-    message (prompt.message);
-
     if (prompt.title == "")
       title_label.set_label (prompt.message);
     else

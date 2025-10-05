@@ -111,8 +111,7 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
   }
 
   public void cancel () {
-    GLib.message ("cancel");
-    GLib.message ("cancelled");
+    GLib.message ("operation cancelled");
 
     switch (mode) {
     case Mode.NONE :
