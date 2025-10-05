@@ -62,6 +62,10 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     cancel_btt.clicked.connect (on_cancel_clicked);
 
     close_request.connect (on_window_close);
+
+    password_strength_level.add_offset_value ("low", 2);
+    password_strength_level.add_offset_value ("high", 5);
+    password_strength_level.add_offset_value ("full", 7);
   }
 
   private void show_revealer () {
@@ -95,8 +99,69 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     } else {
       warn_rev.set_reveal_child (false);
     }
-    password_entry.set_text ("");
     password_entry.grab_focus ();
+
+    if (prompt.password_new) {
+      message ("New password");
+      confirm_password_entry.set_text ("");
+      confirm_password_rev.set_reveal_child (true);
+
+      password_entry.notify["text"].connect (on_confirm_pass_text_change);
+      unlock_btt.set_child (new Gtk.Label ("Confirm"));
+    } else {
+      password_entry.set_text ("");
+    }
+  }
+
+  private void on_confirm_pass_text_change () {
+    var strength = calculate_password_strength (password_entry.get_text ());
+
+    password_strength_level.set_value (strength);
+    // message ("%i", calculate_password_strength (password_entry.get_text ()));
+  }
+
+  private static int calculate_password_strength (string password) {
+    int upper = 0, lower = 0, digit = 0, misc = 0;
+    double pwstrength;
+    int length = password.length;
+
+    if (length == 0)
+      return 0;
+
+    for (int i = 0; i < length; i++) {
+      char c = password[i];
+      if (c.isdigit ())
+        digit++;
+      else if (c.islower ())
+        lower++;
+      else if (c.isupper ())
+        upper++;
+      else
+        misc++;
+    }
+
+    // Cap values to limit their weight
+    if (length > 5)
+      length = 5;
+    if (digit > 3)
+      digit = 3;
+    if (upper > 3)
+      upper = 3;
+    if (misc > 3)
+      misc = 3;
+
+    pwstrength = ((length * 1) - 2)
+      + (digit * 1)
+      + (misc * 1.5)
+      + (upper * 1);
+
+    // Always return at least 1.0 for non-empty passwords
+    if (pwstrength < 1.0)
+      pwstrength = 1.0;
+    if (pwstrength > 10.0)
+      pwstrength = 10.0;
+
+    return (int) pwstrength;
   }
 
   private void on_close () {

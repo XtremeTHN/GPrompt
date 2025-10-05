@@ -1,8 +1,9 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $GPromptWindow : Adw.ApplicationWindow {
+template $GPromptWindow: Adw.ApplicationWindow {
     title: "Keyring";
+
     content: Adw.ToolbarView {
         [top]
         Adw.HeaderBar {}
@@ -12,6 +13,7 @@ template $GPromptWindow : Adw.ApplicationWindow {
             margin-bottom: 10;
             margin-end: 10;
             margin-top: 10;
+
             child: Box {
                 hexpand: true;
                 orientation: vertical;
@@ -19,18 +21,22 @@ template $GPromptWindow : Adw.ApplicationWindow {
 
                 Box {
                     orientation: vertical;
+
                     Box {
-                      spacing: 10;
-                      halign: center;
+                        spacing: 10;
+                        halign: center;
 
-                      Image {
-                          icon-name: "unlock-symbolic";
-                      }
+                        Image {
+                            icon-name: "unlock-symbolic";
+                        }
 
-                      Label title_label {
-                          styles ["title-3"]
-                      }
+                        Label title_label {
+                            styles [
+                                "title-3",
+                            ]
+                        }
                     }
+
                     Label description_label {}
                 }
 
@@ -42,41 +48,60 @@ template $GPromptWindow : Adw.ApplicationWindow {
                         placeholder-text: _("Password");
                         show-peek-icon: true;
                     }
+
                     Revealer confirm_password_rev {
                         child: Box {
                             orientation: vertical;
                             spacing: 10;
+
                             PasswordEntry confirm_password_entry {
                                 placeholder-text: _("Confirm password");
                                 show-peek-icon: true;
                             }
+
                             Box {
                                 spacing: 5;
                                 orientation: vertical;
+
                                 Label {
                                     xalign: 0;
                                     label: _("Password strength");
                                 }
-                                LevelBar password_strength_level {}
+
+                                LevelBar password_strength_level {
+                                    max-value: 7;
+                                    min-value: 0;
+                                    mode: discrete;
+                                }
                             }
                         };
                     }
                 }
 
                 Revealer warn_rev {
-                  child: Label warn_label {
-                    styles ["error", "caption"]
-                  };
+                    child: Label warn_label {
+                        styles [
+                            "error",
+                            "caption",
+                        ]
+                    };
                 }
 
                 Box {
-                    styles ["linked"]
-                    
+                    styles [
+                        "linked",
+                    ]
+
                     homogeneous: true;
+
                     Button unlock_btt {
-                        styles ["warning"]
+                        styles [
+                            "warning",
+                        ]
+
                         label: "Unlock";
                     }
+
                     Button cancel_btt {
                         label: _("Cancel");
                     }
