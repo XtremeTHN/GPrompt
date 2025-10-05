@@ -44,7 +44,7 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
   }
 
   public async unowned string password_async (GLib.Cancellable? cancellable) {
-    debug ("password_async initiated");
+    GLib.message ("password_async initiated");
     _pass_async_cb = password_async.callback;
 
     if (_pass_async_cb != null) {
@@ -58,12 +58,11 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
 
     yield; // waits for _pass_async_cb to be called
 
-    // return password_entry.get_text ();
     return password_entry.get_text ();
   }
 
   public bool complete () {
-    debug ("complete called");
+    GLib.message ("complete called");
     if (mode == Mode.NONE) { return false; };
 
     string pass = password_entry.get_text ();
@@ -73,6 +72,7 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
         string confirm = confirm_entry.get_text ();
         if (pass != confirm) {
           set_warning ("Passwords do not match");
+          show_password ();
           return false;
         }
         __password_strength = calculate_password_strength (pass);
@@ -111,22 +111,22 @@ public class GPrompt.Prompt : Object, Gcr.Prompt {
   }
 
   public void cancel () {
-    debug ("cancel");
+    GLib.message ("cancel");
     GLib.message ("cancelled");
 
     switch (mode) {
     case Mode.NONE :
-      debug ("Mode is NONE");
+      GLib.message ("Mode is NONE");
       close ();
       return;
     case Mode.FOR_CONFIRM :
-      debug ("Mode is confirm");
+      GLib.message ("Mode is confirm");
       confirmation = Gcr.PromptReply.CANCEL;
       close ();
       _confirm_async_cb ();
       break;
     case Mode.FOR_PASSWORD :
-      debug ("Mode is password");
+      GLib.message ("Mode is password");
       close ();
       break;
     }
