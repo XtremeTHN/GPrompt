@@ -4,6 +4,9 @@ public class GPrompt.Window : Adw.ApplicationWindow {
   public unowned Gtk.Label title_label;
 
   [GtkChild]
+  public unowned Gtk.Image icon;
+
+  [GtkChild]
   public unowned Gtk.Label description_label;
 
   [GtkChild]
@@ -55,8 +58,8 @@ public class GPrompt.Window : Adw.ApplicationWindow {
 
     // TODO: Implement this
     // prompt.bind_property ("confirm-visible", confirm_password_rev, "visible", BindingFlags.SYNC_CREATE, null, null);
-    // prompt.bind_property ("warning", warn_rev, "reveal-child", BindingFlags.SYNC_CREATE, show_revealer, null);
-    prompt.notify.connect (show_revealer);
+
+    prompt.notify["warning"].connect (show_warning);
 
     unlock_btt.clicked.connect (on_unlock_clicked);
     cancel_btt.clicked.connect (on_cancel_clicked);
@@ -68,9 +71,13 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     password_strength_level.add_offset_value ("full", 7);
   }
 
-  private void show_revealer () {
-    info (prompt.warning);
-    info ("%b", prompt.warning != "");
+  private void show_warning () {
+    if (prompt.warning != "") {
+      warn_rev.set_reveal_child (true);
+      warn_label.set_label (prompt.warning);
+    } else {
+      warn_rev.set_reveal_child (false);
+    }
   }
 
   private void set_sensitivity (bool sensitive) {
@@ -93,16 +100,17 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     present ();
 
     set_sensitivity (true);
-    if (prompt.warning != "") {
-      warn_rev.set_reveal_child (true);
-      warn_label.set_label (prompt.warning);
-    } else {
-      warn_rev.set_reveal_child (false);
-    }
     password_entry.grab_focus ();
 
     if (prompt.password_new) {
       message ("New password");
+      if (prompt.title == "") {
+        // maybe this shouldn't be set in here but it looks ugly when theres no label
+        prompt.title = "Password";
+      }
+
+      icon.set_from_icon_name ("key-symbolic");
+
       confirm_password_entry.set_text ("");
       confirm_password_rev.set_reveal_child (true);
 
