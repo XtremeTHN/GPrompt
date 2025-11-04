@@ -47,6 +47,7 @@ template $GPromptWindow: Adw.ApplicationWindow {
                     PasswordEntry password_entry {
                         placeholder-text: _("Password");
                         show-peek-icon: true;
+                        activate => $on_password_activate();
                     }
 
                     Revealer confirm_password_rev {
@@ -57,6 +58,7 @@ template $GPromptWindow: Adw.ApplicationWindow {
                             PasswordEntry confirm_password_entry {
                                 placeholder-text: _("Confirm password");
                                 show-peek-icon: true;
+                                activate => $auth();
                             }
 
                             Box {
@@ -88,10 +90,7 @@ template $GPromptWindow: Adw.ApplicationWindow {
                 }
 
                 Box {
-                    styles [
-                        "linked",
-                    ]
-
+                    spacing: 5;
                     homogeneous: true;
 
                     Button unlock_btt {
@@ -100,10 +99,12 @@ template $GPromptWindow: Adw.ApplicationWindow {
                         ]
 
                         label: "Unlock";
+                        clicked => $auth();
                     }
 
                     Button cancel_btt {
                         label: _("Cancel");
+                        clicked => $cancel_prompt();
                     }
                 }
             };

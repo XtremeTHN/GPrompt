@@ -52,17 +52,10 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     prompt.show_password.connect (on_show_password);
     prompt.prompt_close.connect (on_close);
 
-    // prompt.bind_property ("title", title_label, "label", BindingFlags.SYNC_CREATE, null, null);
     prompt.bind_property ("description", description_label, "label", BindingFlags.SYNC_CREATE, null, null);
     prompt.bind_property ("cancel-label", cancel_btt, "label", BindingFlags.SYNC_CREATE, null, null);
 
-    // TODO: Implement this
-    // prompt.bind_property ("confirm-visible", confirm_password_rev, "visible", BindingFlags.SYNC_CREATE, null, null);
-
     prompt.notify["warning"].connect (show_warning);
-
-    unlock_btt.clicked.connect (on_unlock_clicked);
-    cancel_btt.clicked.connect (on_cancel_clicked);
 
     close_request.connect (on_window_close);
 
@@ -87,12 +80,22 @@ public class GPrompt.Window : Adw.ApplicationWindow {
     cancel_btt.set_sensitive (sensitive);
   }
 
-  private void on_unlock_clicked (Gtk.Button _) {
+  [GtkCallback]
+  private void on_password_activate () {
+    if (prompt.password_new)
+      confirm_password_entry.grab_focus ();
+    else
+      auth ();
+  }
+
+  [GtkCallback]
+  private void auth () {
     set_sensitivity (false);
     prompt.complete ();
   }
 
-  private void on_cancel_clicked (Gtk.Button _) {
+  [GtkCallback]
+  private void cancel_prompt (Gtk.Button _) {
     prompt.cancel ();
   }
 
@@ -111,6 +114,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
       message ("New password");
       icon.set_from_icon_name ("key-symbolic");
 
+      password_entry.set_text ("");
       confirm_password_entry.set_text ("");
       confirm_password_rev.set_reveal_child (true);
 
@@ -123,9 +127,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
 
   private void on_confirm_pass_text_change () {
     var strength = calculate_password_strength (password_entry.get_text ());
-
     password_strength_level.set_value (strength);
-    // message ("%i", calculate_password_strength (password_entry.get_text ()));
   }
 
   private static int calculate_password_strength (string password) {
