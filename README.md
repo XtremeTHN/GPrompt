@@ -25,4 +25,4 @@ meson -C build compile
 An executable with the name of `gprompt` will be available at `build/src`.
 
 ## Preview
-https://github.com/user-attachments/assets/c04604e9-d6e0-4bfc-bfe2-1c4aaaa5428a
+https://github.com/user-attachments/assets/b295a105-bdb4-4729-a55d-691b9e12f7f5
