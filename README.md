@@ -16,7 +16,8 @@ You need the following dependencies (archlinux pkgs names).
 - `gcr-4`
 - `gtk4`
 - `libadwaita`
-- `gtk4-layer-shell`<br>
+- `gtk4-layer-shell`
+
 Then run:
 ```bash
 meson build
