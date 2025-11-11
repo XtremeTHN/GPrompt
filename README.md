@@ -5,7 +5,7 @@ A `Gcr.Prompt` implementation written in vala. It features a libadwaita window t
 
 - [x] Unlock keyring
 - [x] New password
-- [ ] Confirm request (idk what this means, i never seen this feature before)
+- [ ] Confirm request (idk what this means, i've never seen this feature before)
 
 ## Building 
 ### NixOs
