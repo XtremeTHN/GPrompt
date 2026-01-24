@@ -37,6 +37,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
   private Background back;
 
   public Window (double background_opacity) {
+    add_css_class ("window");
     back = new Background ();
     back.set_opacity (background_opacity);
     back.present ();
