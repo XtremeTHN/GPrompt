@@ -8,106 +8,108 @@ template $GPromptWindow: Adw.ApplicationWindow {
         [top]
         Adw.HeaderBar {}
 
-        content: Adw.Clamp {
+        content: Box {
             margin-start: 10;
             margin-bottom: 10;
             margin-end: 10;
             margin-top: 10;
+            hexpand: true;
+            orientation: vertical;
+            spacing: 10;
 
-            child: Box {
-                hexpand: true;
+            Box {
                 orientation: vertical;
-                spacing: 10;
 
                 Box {
-                    orientation: vertical;
+                    spacing: 10;
+                    halign: center;
 
-                    Box {
-                        spacing: 10;
-                        halign: center;
-
-                        Image icon {
-                            icon-name: "unlock-symbolic";
-                        }
-
-                        Label title_label {
-                            styles [
-                                "title-3",
-                            ]
-                        }
+                    Image icon {
+                        icon-name: "unlock-symbolic";
                     }
 
-                    Label description_label {}
-                }
-
-                Box {
-                    orientation: vertical;
-                    spacing: 5;
-
-                    PasswordEntry password_entry {
-                        placeholder-text: _("Password");
-                        show-peek-icon: true;
-                        activate => $on_password_activate();
-                    }
-
-                    Revealer confirm_password_rev {
-                        child: Box {
-                            orientation: vertical;
-                            spacing: 10;
-
-                            PasswordEntry confirm_password_entry {
-                                placeholder-text: _("Confirm password");
-                                show-peek-icon: true;
-                                activate => $auth();
-                            }
-
-                            Box {
-                                spacing: 5;
-                                orientation: vertical;
-
-                                Label {
-                                    xalign: 0;
-                                    label: _("Password strength");
-                                }
-
-                                LevelBar password_strength_level {
-                                    max-value: 7;
-                                    min-value: 0;
-                                    mode: discrete;
-                                }
-                            }
-                        };
-                    }
-                }
-
-                Revealer warn_rev {
-                    child: Label warn_label {
+                    Label title_label {
                         styles [
-                            "error",
-                            "caption",
+                            "title-3",
                         ]
+                    }
+                }
+
+                Label description_label {
+                    wrap: true;
+                    wrap-mode: word_char;
+                    max-width-chars: 70;
+                    justify: center;
+                }
+            }
+
+            Box {
+                orientation: vertical;
+                spacing: 5;
+
+                PasswordEntry password_entry {
+                    placeholder-text: _("Password");
+                    show-peek-icon: true;
+                    activate => $on_password_activate();
+                }
+
+                Revealer confirm_password_rev {
+                    child: Box {
+                        orientation: vertical;
+                        spacing: 10;
+
+                        PasswordEntry confirm_password_entry {
+                            placeholder-text: _("Confirm password");
+                            show-peek-icon: true;
+                            activate => $auth();
+                        }
+
+                        Box {
+                            spacing: 5;
+                            orientation: vertical;
+
+                            Label {
+                                xalign: 0;
+                                label: _("Password strength");
+                            }
+
+                            LevelBar password_strength_level {
+                                max-value: 7;
+                                min-value: 0;
+                                mode: discrete;
+                            }
+                        }
                     };
                 }
+            }
 
-                Box {
-                    spacing: 5;
-                    homogeneous: true;
+            Revealer warn_rev {
+                child: Label warn_label {
+                    styles [
+                        "error",
+                        "caption",
+                    ]
+                };
+            }
 
-                    Button unlock_btt {
-                        styles [
-                            "warning",
-                        ]
+            Box {
+                spacing: 5;
+                homogeneous: true;
 
-                        label: "Unlock";
-                        clicked => $auth();
-                    }
+                Button unlock_btt {
+                    styles [
+                        "warning",
+                    ]
 
-                    Button cancel_btt {
-                        label: _("Cancel");
-                        clicked => $cancel_prompt();
-                    }
+                    label: "Unlock";
+                    clicked => $auth();
                 }
-            };
+
+                Button cancel_btt {
+                    label: _("Cancel");
+                    clicked => $cancel_prompt();
+                }
+            }
         };
     };
 }
