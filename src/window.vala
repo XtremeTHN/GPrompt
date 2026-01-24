@@ -120,6 +120,7 @@ public class GPrompt.Window : Adw.ApplicationWindow {
 
       password_entry.notify["text"].connect (on_confirm_pass_text_change);
       unlock_btt.set_child (new Gtk.Label ("Confirm"));
+      unlock_btt.set_css_classes ({"suggested-action"});
     } else {
       password_entry.set_text ("");
     }
